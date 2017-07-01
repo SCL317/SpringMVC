@@ -23,7 +23,7 @@
 				 <div id="buttons">
 				 <label for="dummy"></label>
 				 <input id="reset" type="reset" tabindex="4"/>
-				 <input id="submit" type="submit" tabindex="5"/>
+				 <input id="submit" type="submit" tabindex="5" value="Add Product"/>
 				 </div>
 			</fieldset>
 		</form>

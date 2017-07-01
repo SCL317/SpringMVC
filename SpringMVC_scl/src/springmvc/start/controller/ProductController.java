@@ -1,7 +1,5 @@
 package springmvc.start.controller;
 
-import javax.websocket.server.PathParam;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +20,7 @@ public class ProductController {
 	
 	//自动注入向后端数据库写数据的组件
 	@Autowired
-	private ProductController productController;
+	private ProductService productService;
 	
 	@RequestMapping(value="/product_input")
 	public String inputProduct(){
@@ -38,29 +36,34 @@ public class ProductController {
 		product.setName(productForm.getName());
 		product.setDescription(productForm.getDescription());
 		
-		product.setPrice(Double.parseDouble(productForm.getPrice()));
+		try {
+			product.setPrice(Double.parseDouble(productForm.getPrice()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		 //add product
 		Product saveProduct=productService.add(product);
 		//使用下面的对象，可以重新定向传值
 		redirectAttributes.addFlashAttribute("message","The product successfully added!");
 		return "redirect:/product_view/" + saveProduct.getId()+".action";
-		
 	}
 	
-	//http://localhost:8080/springmvc/
+	//http://localhost:8080/SpringMVC_scl/product_view/2.action
 	@RequestMapping(value="/product_view/{id}") //{}中的id为路径变量
 	public String viewProduct(@PathVariable Long id,Model model){
 		Product product=productService.get(id);
 		model.addAttribute("product",product);
-		return "productView";
+		return "ProductView";
 	}
 	
+	//http://localhost:8080/SpringMVC_scl/product_retrieve.action?id=1
 	@RequestMapping(value="/product_retrieve")
 	public String sendProduct(@RequestParam Long id,Model model){
+		//使用@RequestParam获取URL路径上？后面的参数，而servlet中使用Request对象的getParameter（）方法
 		Product product=productService.get(id);
 		model.addAttribute("product",product);
-		return "productView";
-	}
+		return "ProductView";
 	}
 }
+
